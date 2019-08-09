@@ -107,7 +107,7 @@ svc/router - 172.21.67.246 ports 80, 443
 ```
 
 ## Expose our applications by creating a route
-By default the services that are created are only routable from within the cluster itself. An OpenShift route exposes a service at a host name, like www.example.com, so that external clients can reach it by name. If you do not specify a route one will be generated for you. 
+By default the services that are created are only routable from within the cluster itself. An OpenShift route exposes a service at a host name, like www.example.com, so that external clients can reach it by name. If you do not specify a route one will be generated for you in the form of `<service-name>.<namespace>.<cluster-name>.<random-string>.<ingress-subdomain>`.
 
 ```
 oc expose svc/node-es-service
