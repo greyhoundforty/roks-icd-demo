@@ -1,7 +1,7 @@
-# RHOS ICD demo
+# ROKS (RedHat OpenShift on Kubernetes) ICD demo
 Example Applications for frontend app backed by IBM Cloud Databases
 
-##  Deploy a Multizone RHOS cluster in US-SOUTH
+##  Deploy a Multizone ROKS cluster in US-SOUTH
 Visit the [OpenShift](https://cloud.ibm.com/kubernetes/clusters?platformType=openshift) page in the cloud portal to start provisioning your cluster.  
  - Click Create Cluster
  - Name your cluster
