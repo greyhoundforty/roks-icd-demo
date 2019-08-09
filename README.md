@@ -15,8 +15,17 @@ Visit the [OpenShift](https://cloud.ibm.com/kubernetes/clusters?platformType=ope
 While the cluster is deploying, we'll go ahead and deploy a few ICD instances. In this case we'll be deploying an instance of Etcd and Elasticsearch. 
 
 ## Deploy ICD instances
- - Deploy [Etcd](https://cloud.ibm.com/catalog/services/databases-for-etcd) in the same region and Resource group as your ROKS cluster. 
- - Deploy [Elasticsearch](https://cloud.ibm.com/catalog/services/databases-for-elasticsearch) in the same region and Resource group as your ROKS cluster.
+ - Deploy [Etcd](https://cloud.ibm.com/catalog/services/databases-for-etcd) in the same region and Resource group as your ROKS cluster. For this example you can use the `lite` plan. If you have already provisioned a lite version of Etcd you will need to change `lite` to `standard`.
+
+```
+ibmcloud resource service-instance-create <Your-Etcd-Service-Name> databases-for-etcd lite us-south
+```
+
+ - Deploy [Elasticsearch](https://cloud.ibm.com/catalog/services/databases-for-elasticsearch) in the same region and Resource group as your ROKS cluster. For this example you can use the `lite` plan. If you have already provisioned a lite version of Elasticsearch you will need to change `lite` to `standard`.
+
+```
+ibmcloud resource service-instance-create <Your-Elasticsearch-Service-Name> databases-for-elasticsearch lite us-south
+```
 
 ## Log in your your Openshift cluster
 Hopefully your cluster has completed provisioning. Once it does log in to the Cluster GUI to grab your `oc` login command. It will look something like this:
@@ -31,9 +40,9 @@ You can also find your cluster master URL by running the command `ibmcloud ks cl
 [Service binding](https://cloud.ibm.com/docs/containers?topic=containers-service-binding#bind-services) is a quick way to create service credentials for an IBM Cloud service by using its public service endpoint and storing these credentials in a Kubernetes/ROKS secret in your cluster.
 
 ```
-ibmcloud ks cluster-service-bind --cluster CLUSTER-NAME --namespace default --service Etcd-Service-Name
+ibmcloud ks cluster-service-bind --cluster CLUSTER-NAME --namespace default --service <Your-Etcd-Service-Name>
 
-ibmcloud ks cluster-service-bind --cluster CLUSTER-NAME --namespace default --service Elasticsearch-Service-Name
+ibmcloud ks cluster-service-bind --cluster CLUSTER-NAME --namespace default --service <Your-Elasticsearch-Service-Name>
 ```
 
 ## Build and push Node.js applications
@@ -45,9 +54,11 @@ cd roks-icd-demo
 ```
 
 ### Build and deploy the Node.js Etcd container image
+You will need to target an [IBM Cloud Container Registry](https://cloud.ibm.com/docs/services/Registry?topic=registry-getting-started#getting-started) namespace in order to build and push your container image. You can create a namepace with the `ibmcloud cr namespace-add` command and retrieve existing namespaces with `ibmcloud cr namespace-list`. 
+
 ```
 cd etcd
-
+ibmcloud cr login 
 ibmcloud cr build -t <region>.icr.io/<namespace>/icdetcd .
 ```
 
@@ -61,7 +72,6 @@ oc create -f etcd-deployment.yaml
 
 ```
 cd ../elasticsearch
-
 ibmcloud cr build -t <region>.icr.io/<namespace>/icdes .
 ```
 
